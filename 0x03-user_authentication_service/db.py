@@ -38,7 +38,6 @@ class DB:
         self._session.commit()
         return new_user
 
-
     def find_user_by(self, **kwargs) -> User:
         """ Returns first row found in users table based on keyword args """
 
@@ -66,7 +65,6 @@ class DB:
             return search_user
         else:
             raise NoResultFound
-
 
     def update_user(self, user_id: int, **kwargs) -> None:
         """ Finds user record and updates attributes """
