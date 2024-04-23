@@ -8,3 +8,12 @@ from auth import Auth
 
 app = Flask(__name__)
 AUTH = Auth()
+
+
+@app.route('/', methods=['GET'], strict_slashes=False)
+def index() -> str:
+    """ GET /
+    Return:
+      - JSON payload
+    """
+    return jsonify({"message": "Bienvenue"})
