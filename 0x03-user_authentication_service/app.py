@@ -44,3 +44,33 @@ def users() -> str:
             })
         except ValueError:
             return jsonify({"message": "email already registered"}), 400
+
+
+@app.route('/sessions', methods=['POST'], strict_slashes=False)
+def login() -> str:
+    """ Creates new session for user, stores as cookie
+    Email and pswd fields in x-www-form-urlencoded request
+    Return:- JSON payload
+    """
+    form_data = request.form
+
+    if "email" not in form_data:
+        return jsonify({"message": "email required"}), 400
+    elif "password" not in form_data:
+        return jsonify({"message": "password required"}), 400
+    else:
+
+        email = request.form.get("email")
+        pswd = request.form.get("password")
+
+        if AUTH.valid_login(email, pswd) is False:
+            abort(401)
+        else:
+            session_id = AUTH.create_session(email)
+            response = jsonify({
+                "email": email,
+                "message": "logged in"
+                })
+            response.set_cookie('session_id', session_id)
+
+            return response
