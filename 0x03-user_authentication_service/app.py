@@ -137,3 +137,39 @@ def get_reset_password_token() -> str:
             }), 200
         except ValueError:
             abort(403)
+
+
+@app.route('/reset_password', methods=['PUT'], strict_slashes=False)
+def update_password() -> str:
+    """ PUT /reset_password
+    Updates user password
+    Email, reset_token and new_password fields in x-www-form-urlencoded request
+    Return:
+      - JSON payload
+    """
+    form_data = request.form
+
+    if "email" not in form_data:
+        return jsonify({"message": "email required"}), 400
+    if "reset_token" not in form_data:
+        return jsonify({"message": "reset_token required"}), 400
+    if "new_password" not in form_data:
+        return jsonify({"message": "new_password required"}), 400
+    else:
+
+        email = request.form.get("email")
+        reset_token = request.form.get("reset_token")
+        new_pswd = request.form.get("new_password")
+
+        try:
+            AUTH.update_password(reset_token, new_pswd)
+            return jsonify({
+                "email": email,
+                "message": "Password updated"
+            }), 200
+        except ValueError:
+            abort(403)
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port="5000")
